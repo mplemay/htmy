@@ -144,7 +144,7 @@ user_table = html.table(
 - `html` module: a complete set of [baseline HTML tags](https://developer.mozilla.org/en-US/docs/Glossary/Baseline/Compatibility).
 - `md`: `MarkdownParser` utility and `MD` component for loading, parsing, converting, and rendering markdown content.
 - `i18n`: utilities for async, JSON based internationalization.
-- `BaseTag`, `TagWithProps`, `Tag`, `WildcardTag`: base classes for custom XML tags.
+- `BaseTag`, `TagWithProps`, `Tag`: base classes for custom XML tags.
 - `ErrorBoundary`, `Fragment`, `SafeStr`, `WithContext`: utilities for error handling, component wrappers, context providers, and formatting.
 - `Snippet`: utility class for loading and customizing document snippets from the file system.
 - `etree.ETreeConverter`: utility that converts XML to a component tree with support for custom HTMY components.

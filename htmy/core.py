@@ -4,8 +4,9 @@ import abc
 import asyncio
 import enum
 from collections.abc import Awaitable, Callable, Container
+from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, TypedDict, cast, overload
+from typing import TYPE_CHECKING, Any, ClassVar, Generic, cast, overload
 from xml.sax.saxutils import escape as xml_escape
 from xml.sax.saxutils import quoteattr as xml_quoteattr
 
@@ -493,7 +494,8 @@ class Formatter(ContextAware):
 _default_tag_formatter = Formatter()
 
 
-class TagConfig(TypedDict, total=False):
+@dataclass(frozen=True, kw_only=True, slots=True)
+class TagConfig:
     """Tag configuration."""
 
     child_separator: ComponentType | None
@@ -547,9 +549,8 @@ class TagWithProps(BaseTag):
 
     def htmy(self, context: Context) -> Component:
         """Renders the component."""
-        name = self.htmy_name
         props = self._htmy_format_props(context=context)
-        return SafeStr(f"<{name} {props}/>")
+        return SafeStr(f"<{self.htmy_name} {props}/>")
 
     def _htmy_format_props(self, context: Context) -> str:
         """Formats tag properties."""
@@ -560,9 +561,7 @@ class TagWithProps(BaseTag):
 class Tag(TagWithProps):
     """Base class for tags with both properties and children."""
 
-    __slots__ = ("children",)
-
-    tag_config: TagConfig = {"child_separator": "\n"}
+    __slots__ = ("children", "tag_config")
 
     def __init__(self, *children: ComponentType, **props: PropertyValue) -> None:
         """
@@ -574,18 +573,14 @@ class Tag(TagWithProps):
         """
         super().__init__(**props)
         self.children = children
-
-    @property
-    def child_separator(self) -> ComponentType | None:
-        """The child separator to use."""
-        return self.tag_config.get("child_separator", None)
+        self.tag_config: TagConfig = TagConfig(child_separator="\n")
 
     def htmy(self, context: Context) -> Component:
         """Renders the component."""
         name = self.htmy_name
         props = self._htmy_format_props(context=context)
         opening, closing = SafeStr(f"<{name} {props}>"), SafeStr(f"</{name}>")
-        separator = self.child_separator
+        separator = self.tag_config.child_separator
         return (
             opening,
             *(
@@ -595,33 +590,3 @@ class Tag(TagWithProps):
             ),
             closing,
         )
-
-
-class WildcardTag(Tag):
-    """Tag that can have both children and properties, and whose tag name can be set."""
-
-    __slots__ = ("_child_separator",)
-
-    def __init__(
-        self,
-        *children: ComponentType,
-        htmy_name: str,
-        htmy_child_separator: ComponentType | None = None,
-        **props: PropertyValue,
-    ) -> None:
-        """
-        Initialization.
-
-        Arguments:
-            *children: Children components.
-            htmy_name: The tag name to use for this tag.
-            htmy_child_separator: The child separator to use (if any).
-            **props: Tag properties.
-        """
-        super().__init__(*children, **props)
-        self._htmy_name = htmy_name
-        self._child_separator = htmy_child_separator
-
-    @property
-    def child_separator(self) -> ComponentType | None:
-        return self._child_separator

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from htmy.typing import ComponentType, Properties
 
 
-from htmy.core import Fragment, SafeStr, WildcardTag
+from htmy.core import Fragment, SafeStr, Tag
 
 
 class ETreeConverter:
@@ -57,7 +57,7 @@ class ETreeConverter:
         properties = self._convert_properties(element)
 
         return (
-            WildcardTag(*children, htmy_name=tag, **properties)
+            Tag(*children, htmy_name=tag, **properties)
             if component is None
             else component(
                 *children,

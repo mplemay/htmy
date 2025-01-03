@@ -5,7 +5,7 @@ from .typing import PropertyValue
 
 
 class _DefaultTagConfig:
-    inline_children: TagConfig = {"child_separator": None}
+    inline_children: TagConfig = TagConfig(child_separator=None)
 
 
 class DOCTYPE:

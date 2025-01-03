@@ -10,7 +10,6 @@ from .core import Tag as Tag
 from .core import TagConfig as TagConfig
 from .core import TagWithProps as TagWithProps
 from .core import Text as Text
-from .core import WildcardTag as WildcardTag
 from .core import WithContext as WithContext
 from .core import XBool as XBool
 from .core import component as component

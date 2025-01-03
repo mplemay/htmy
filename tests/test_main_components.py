@@ -16,6 +16,7 @@ from htmy import (
     XBool,
     component,
 )
+from htmy.core import TagConfig
 from htmy.renderer import BaselineRenderer, Renderer
 
 
@@ -41,10 +42,10 @@ class Page:
         class div(Tag): ...
 
         class h1(Tag):
-            tag_config = {"child_separator": None}
+            tag_config = TagConfig(child_separator=None)
 
         class a_h2(Tag):
-            tag_config = {"child_separator": None}
+            tag_config = TagConfig(child_separator=None)
 
         class a_main(Tag): ...
 
